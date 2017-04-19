@@ -51,16 +51,22 @@ public class TestClient {
 
 	public static void main(String[] args) {
 
-		WeishuClient weishuCliet = new WeishuClient ();
+		WeishuClient weishuCliet = new WeishuClient ();   // 初始化Client对象
 
-		weishuCliet.setDevelopId("XXXX开发者IDXXXX");
-		weishuCliet.setPublicKey("XXXX公钥XXXX");
-		weishuCliet.setSolt("XXXX校验码XXXX");
+		weishuCliet.setDevelopId("XXXX开发者IDXXXX");      // 系统参数设置
+		weishuCliet.setPublicKey("XXXX公钥XXXX");          // 系统参数设置
+		weishuCliet.setSolt("XXXX校验码XXXX");             // 系统参数设置
 				
-		JSONObject result = weishuCliet.getDataFromPlatform ("银行卡号", "姓名", "手机号", "身份证号");
-
-		System.out.println(result.toString());
+		JSONObject bussinessCondition = new JSONObject();  // 业务参数JSON对象
+		// 业务参数填充，不同的接口对应不同的业务参数要求，本代码以“查询银联卡消费数据”接口为例子
+		bussinessCondition.put("bankId", "银行卡号")       // 必选
+		bussinessCondition.put("name", "姓名")             // 可选
+		bussinessCondition.put("phone", "手机号")          // 可选
+		bussinessCondition.put("idNum", "身份证号")        // 可选
 		
+		// 调用服务接口
+		JSONObject result = weishuCliet.getDataFromPlatform (bussinessCondition);
+		System.out.println(result.toString());
 	}
 }	
 ```
