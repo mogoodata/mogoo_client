@@ -1,44 +1,38 @@
 <?php
 
-// ��Կ�ַ���
-#$public_key = '-----BEGIN PUBLIC KEY-----
-#MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbrbo/JaPJTJLl+6hfZm7uuLIr
-#t/hivaLfot32wq/nSzoSsYkoNk27Yy+n10ODoZ75/91Y8QoJKeoWe0Ik1H1DmMuw
-#Ef3eBoBCFn+eNjgZq6SIVBCNEnUaS0STmWqGPFKRFJ1Ujd4rJQ1tGFG3z3v9Cw2b
-#Kq41AAYMD7ZqLv2zfQIDAQAB
-#-----END PUBLIC KEY-----';
-
-
-
+# 公钥字符串
 $public_key = '-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCGSUAM6H3/802jQEEyP+krK0Rd
-6X943wCDjdp5qFfanojOEhn0BYnuhhC3hsUVGYymMw0IswNZiAnRsLF328XyTRG0
+********************请更换成真实的公钥字符串***********************
 OJQAIHCmg7C5abO7c52J9EnyqaDcXF89LQzI1HKOl05nAlz6Zpgz5JlAtL9hMmsU
 MajcRec8x6IbcQ0BiQIDAQAB
 -----END PUBLIC KEY-----';
 
-
-
+# 字符串转成公钥对象，并验证公钥字符串是否正确
 $pu_key = openssl_pkey_get_public($public_key);
 
+# 业务级参数字符串（样例）
+$clear_text = "{\"bankId\":\"6225********\",\"phone\":\"181********\",\"name\":\"张三",\"idNum\":\"421127************\"}";
 
-#$original_json_str = "{\"bankId\":\"6225768711381796\"}";      // ԭʼ��������
-$original_json_str = "{\"bankId\":\"62170032123131312\",\"phone\":\"18124203156\",\"name\":\"\u5c0f\u8d56\",\"idNum\":\"440981100025541232\"}";
 
+# ------------公钥加密：把clear_text加密生成chip_text--------------
+$cipher_text = "";
+openssl_public_encrypt($clear_text, $cipher_text, $pu_key);        // 公钥加密
+$cipher_text = base64_encode($cipher_text);                        // 加密之后进行序列化成字符串结果密文
+echo "\n
 
-echo "------------------------��Կ����----------------------------\n";
-$encrypted = "";
-openssl_public_encrypt($original_json_str, $encrypted, $pu_key);        // ��Կ����
-$encrypted = base64_encode($encrypted);
-echo $encrypted;                // ���ܽ���ַ���
+echo "----------------------------RSA加密结果--------------------------\n"
+echo $encrypted;            
 echo "\n";
 
-
-echo "--------------------------MD5����---------------------------\n";
-
-$str = "ua1mZh+8:$original_json_str";
-echo "�ַ�����$str\n";
-//echo "TRUE - ԭʼ 16 �ַ������Ƹ�ʽ��".md5($str, TRUE)."<br>";
-echo "FALSE - 32 �ַ�ʮ�����Ƹ�ʽ��".md5($str)."<br>";
+# -------------------------MD5加密---------------------------\n";
+$str = "ua1mZh+8:$clear_text";
+$md5_str = .md5($str);
 echo "\n";
-"test_php_encode.php" [dos] 43L, 1494C
+echo $md5_str
+  
+  
+# 经过上文中的步骤之后，需要的系统参数：developeID， cipherText， md5 就已经全部获取成功。
+# 后面的步骤就是把这三个系统参数放到RequestBody里面，通过发送HTTP的POST请求到服务端接口地址即可完成整个查询接口的步骤
+  
+API_url = "http://139.224.81.95:8080/mogoo/api/query
