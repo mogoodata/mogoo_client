@@ -1,4 +1,4 @@
-package weishu;
+package mogoo;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -17,9 +17,9 @@ import javax.crypto.NoSuchPaddingException;
 
 import net.sf.json.JSONObject;
 
-import weishu.HttpRequest;
-
-public class WeishuClient {
+public class MogooClient {
+	
+	private static char[] hexChar = { '0', '1', '2', '3', '4', '5', '6', '7','8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	private String publicKey;
 	private String developerId;
@@ -58,19 +58,11 @@ public class WeishuClient {
 		this.url = url;
 	}
 
-	public JSONObject getDataFromPlatform(String bankId, String name, String phone, String idNum){
+	public JSONObject getDataFromPlatform(JSONObject bussinessConditions){
 		// 请求明文
-		String clearText = "{"
-				+ "\"bankId\":\"" + bankId + "\","
-				+ "\"name\":\"" + name + "\","
-				+ "\"phone\":\"" + phone + "\","	
-				+ "\"idNum\":\"" + idNum + "\""
-				+ "}";
-		String ciphertext = encodeByPublicKey(clearText, getPublicKey());
-		
-		// md5加密
-		String conditionStr = "name=" + name + ", bankId=" + bankId + ", idNum=" + idNum + ", phone=" + phone + "\"" ;
-		String md5 = encodeConditionToMD5(conditionStr);
+		String ciphertext = encodeByPublicKey(bussinessConditions.toString(), getPublicKey());
+		// MD5加密
+		String md5 = encodeConditionToMD5(bussinessConditions.toString());
 		return doPostRequestToGetData(getDeveloperId(), ciphertext, md5);
 	}
 	
@@ -99,11 +91,18 @@ public class WeishuClient {
 
 	private String encodeConditionToMD5(String conditionStr){
 		try {
-			MessageDigest md5 = MessageDigest.getInstance("MD5");
-			byte[] newstr = Base64.getEncoder().encode(md5.digest((conditionStr).getBytes("ISO-8859-1")));
-			System.out.println(new String(newstr,"ISO-8859-1"));
-			return new String(newstr,"ISO-8859-1");			
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+	        MessageDigest md5 = MessageDigest.getInstance("md5");
+	        String originStr = solt + ":" + conditionStr ;
+	        md5.update(originStr.getBytes());
+	        byte[] resultByte = md5.digest();
+	        StringBuilder sb = new StringBuilder(resultByte.length * 2);
+	        for (int i = 0; i < resultByte.length; i++) {
+	            sb.append(hexChar[(resultByte[i] & 0xf0) >>> 4]);
+	            sb.append(hexChar[resultByte[i] & 0x0f]);
+	        }
+	        return sb.toString();
+	        
+		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -115,10 +114,14 @@ public class WeishuClient {
 						   + "\"developerId\":\"" + developerId + "\","	
 						   + "\"ciphertext\":\"" + ciphertext + "\","	
 						   + "\"md5\":\"" + md5 + "\"}"	;			
-		//String url = "http://106.14.35.4:8080/weishu/api/query";
-		HttpRequest request = HttpRequest.post(getUrl()).contentType("application/json").send(requestBody);
+		//String url = "http://localhost:8080/weishu/api/query";
+		String url = "http://139.224.81.95:8080/mogoo/api/query";
+		System.out.println(requestBody);
+		HttpRequest request = HttpRequest.post(url).contentType("application/json").send(requestBody);
 		String result = request.body();
+		System.out.println(result);
 		return JSONObject.fromObject(result);		
 	}
 	
 }
+

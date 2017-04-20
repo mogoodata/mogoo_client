@@ -1,4 +1,4 @@
-package weishu;
+package mogoo;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CREATED;
