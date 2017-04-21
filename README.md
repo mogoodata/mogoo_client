@@ -112,4 +112,4 @@ public class TestClient {
 请联系蘑菇云，由我司提供。
 
 # 6.基于标准HTTP请求进行调用接口
-请先转至并参照[《基于标准HTTP调用规范》](https://github.com/mogoodata/mogoo_client/wiki/%E8%98%91%E8%8F%87%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%8E%A5%E5%8F%A3%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%EF%BC%88http%E7%89%88%EF%BC%89)
+请先转至并参照[《基于标准HTTP调用规范》(多语言)](https://github.com/mogoodata/mogoo_client/wiki/%E8%98%91%E8%8F%87%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%8E%A5%E5%8F%A3%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3%EF%BC%88http%E7%89%88%EF%BC%89)
