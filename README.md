@@ -44,7 +44,7 @@
 依照下述示范程序，将设置API相应系统级参数和业务级参数，同时需引用相关mogoo.Client的jar包，具体由蘑菇云提供。（JDK:1.8）    
 样例代码为针对“查询银联卡消费数据”接口为例子，更换成其他接口主要的变化就在于【业务级参数】的不同设值内容。
 ```java
-import weishu.WeishuClient;
+import mogoo.MogooClient;
 import net.sf.json.JSONObject;
 
 
@@ -52,11 +52,11 @@ public class TestClient {
 
 	public static void main(String[] args) {
 
-		WeishuClient weishuCliet = new WeishuClient ();   // 初始化Client对象
+		MogooClient client = new MogooClient ();   // 初始化Client对象
 
-		weishuCliet.setDevelopId("XXXX开发者IDXXXX");      // 系统参数设置
-		weishuCliet.setPublicKey("XXXX公钥XXXX");          // 系统参数设置
-		weishuCliet.setSolt("XXXX校验码XXXX");             // 系统参数设置
+		client.setDevelopId("XXXX开发者IDXXXX");      // 系统参数设置
+		client.setPublicKey("XXXX公钥XXXX");          // 系统参数设置
+		client.setSolt("XXXX校验码XXXX");             // 系统参数设置
 				
 		JSONObject bussinessCondition = new JSONObject();  // 业务参数JSON对象
 		// 业务参数填充，不同的接口对应不同的业务参数要求，本代码以“查询银联卡消费数据”接口为例子
@@ -66,7 +66,7 @@ public class TestClient {
 		bussinessCondition.put("idNum", "身份证号")        // 可选
 		
 		// 调用服务接口
-		JSONObject result = weishuCliet.getDataFromPlatform (bussinessCondition);
+		JSONObject result = client.getDataFromPlatform (bussinessCondition);
 		System.out.println(result.toString());
 	}
 }	
